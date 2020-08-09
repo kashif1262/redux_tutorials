@@ -1,0 +1,18 @@
+{
+  "name": "redux_tutorials",
+  "version": "1.0.0",
+  "description": "redux react",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "server":"nodemon server.js"
+  },
+  "author": "kashif",
+  "license": "ISC",
+  "dependencies": {
+    "redux": "^4.0.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
