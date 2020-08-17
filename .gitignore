@@ -4,8 +4,7 @@
 /client
 /node_modules
 /.pnp
-.pnp.js
-redux.js
+.pnp.js 
 
 # testing
 /coverage

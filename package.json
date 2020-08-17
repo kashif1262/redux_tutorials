@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "server":"nodemon server.js"
+    "server": "nodemon server.js"
   },
   "author": "kashif",
   "license": "ISC",
   "dependencies": {
-    "redux": "^4.0.5"
+    "axios": "^0.19.2",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

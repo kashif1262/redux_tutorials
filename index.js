@@ -1,70 +1,78 @@
+//asyncThunk
 const redux = require("redux");
 const createStore = redux.createStore;
-const combineReducers = redux.combineReducers;
 const applyMiddleware = redux.applyMiddleware;
+const thunkMiddleware = require('redux-thunk').default;
+const axios = require('axios');
 
-const initialStateOfBook = {
-    numberOfBook:20
-}
-const initialStateOfPen = {
-    numberOfPen:15
+
+const initialState={
+    loading:false,
+    users:[],
+    error:''
 }
 
-function BuyBook (){
+const USER_REQUEST = 'USER_REQUEST';
+const USER_SUCCESS = 'USER_SUCCESS';
+const USER_ERROR = 'USER_ERROR';
+
+const userRequest =()=>{
+    return {
+        type:USER_REQUEST
+    }
+}
+
+const userSuccess =(users)=> {
+    return {
+        type:USER_SUCCESS,
+        payload:users
+    }
+}
+
+const userError =(error)=> {
     return{
-        type:"buy_book",
-        payload:"my first action"
-    }
-}
-function BuyPen(){
-    return{
-        type:"buy_pen",
-        payload:"my sceond action"
+        type:USER_ERROR,
+        payload:error
     }
 }
 
-const BookReducer = (state=initialStateOfBook, action)=>{
+const reducer =(state=initialState, action)=>{
     switch(action.type){
-        case "buy_book":return{
+        case "USER_REQUEST":return{
             ...state,
-            numberOfBook:state.numberOfBook-1
-        } 
-        default: return state
-    }
-}
-
-
-const PenReducer = (state=initialStateOfPen, action) =>{
-    switch(action.type){
-        case "buy_pen":return{
-            ...state,
-            numberOfPen:state.numberOfPen-2
+            loading:true
+        }
+        case "USER_SECCESS":return{
+            loading:false,
+            users:action.payload,
+            error:''
+        }
+        case "USER_ERROR":return{
+            loading:false,
+            users:[],
+            error:action.payload
         }
         default: return state
     }
 
 }
-const reducer = combineReducers({
-    BookReducer,
-    PenReducer
-});
 
-const logger =store=>{
-    return next =>{
-        return action=>{
-            const result =next(action);
-            console.log("middleware log", result );
-            return result;
-        }
+const fetchUser=()=>{
+    return function(dispatch){
+        dispatch(userRequest())
+        axios.get('http://jsonplaceholder.typicode.com/users')
+        .then(responce=>{
+            //respone.data  
+            const users = responce.data.map(user=>user.name)
+            dispatch(userSuccess(users))
+        })
+        .catch(error=>{
+            //error.message
+            dispatch(userError(error.message))
+        })
     }
 }
-const store =createStore(reducer, applyMiddleware(logger));
-console.log('initial state ' , store.getState());
-const unsubscribe = store.subscribe(()=>{console.log("update state value " , store.getState())});
-store.dispatch(BuyBook());
-store.dispatch(BuyBook());
-store.dispatch(BuyBook());
-store.dispatch(BuyPen());
-store.dispatch(BuyPen());
-store.dispatch(BuyPen());
-unsubscribe();
+
+const store = createStore(reducer, applyMiddleware(thunkMiddleware));
+store.subscribe(()=>{console.log(store.getState())});
+store.dispatch(fetchUser());
