@@ -2,9 +2,9 @@
   "name": "redux_tutorials",
   "version": "1.0.0",
   "description": "redux react",
-  "main": "index.js",
+  "main": "redux.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node redux.js",
     "server":"nodemon server.js"
   },
   "author": "kashif",
